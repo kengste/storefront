@@ -3,19 +3,39 @@
 /*eslint-env es6*/
 import React from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
-// import { postProducts } from '../../actions/productsActions';
+import { bindActionCreators } from 'redux';
+import { Col } from 'react-bootstrap';
+import { getProducts } from '../../actions/productsActions';
+import ProductItem from './ProductItem';
 
 class ProductsList extends React.Component {
-
+  componentDidMount() {
+    this.props.getProducts(
+      [{
+        id: 1,
+        title: 'this was the book title',
+        description: 'this is the book description',
+        price: 33.33
+      },
+      {
+        id: 2,
+        title: 'this is the second book title',
+        description: 'this is the second book description',
+        price: 50
+      }]
+    );
+  }
   render() {
-    const list = this.props.products.map((product) => {
+    const list = this.props.products.map((product, index) => {
       return (
-        <div key={product.id}>
-          <h2>{product.title}</h2>
-          <h2>{product.description}</h2>
-          <h2>{product.price}</h2>
-        </div>
+        <Col xs={12} sm={6} md={4} key={index}>
+          <ProductItem
+            title={product.title}
+            description={product.description}
+            price={product.price}
+            quantity={product.quantity}
+          />
+        </Col>
     );
   });
     return (
@@ -33,10 +53,10 @@ class ProductsList extends React.Component {
     };
   };
 
-// const mapDispatchToProps = dispatch => {
-//   return bindActionCreators({
-//     postProducts: postProducts
-//   }, dispatch)
-// }
+  const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+      getProducts
+    }, dispatch);
+  };
 
-export default connect(mapStateToProps)(ProductsList);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsList);
